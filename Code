@@ -1,0 +1,126 @@
+package excel;
+import java.io.*;
+import jxl.*;
+import jxl.read.biff.BiffException;
+import jxl.write.*;
+import jxl.write.Number;
+import jxl.write.biff.RowsExceededException;
+public class text {
+	public static final int  A=4;
+	public static final int  B=5;
+	public static final int  C=14;
+	public static final int  D=15;
+	public static final int  E=16;
+	public static final double H1=0.04;
+	public static final double H2=0.05;
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		text obj=new text();
+		File file=new File("C:\\Users\\刘宇\\Desktop\\DATABASE\\工作簿1.xls");
+		File file1=new File("C:\\Users\\刘宇\\Desktop\\DATABASE\\工作簿3.xls");
+		obj.readExcel(file,file1);
+	}
+	public void readExcel(File file,File file1) {
+		try {
+			InputStream is=new FileInputStream(file.getAbsolutePath());
+			OutputStream are=new FileOutputStream(file1.getAbsoluteFile());
+			Workbook wb=Workbook.getWorkbook(is);
+			WritableWorkbook wwb=Workbook.createWorkbook(are);
+			int sheet_size=wb.getNumberOfSheets();
+			for(int index=0;index<sheet_size;index++) {
+				Sheet sheet=wb.getSheet(index);
+				WritableSheet ws=wwb.createSheet("第"+(index+1)+"个实验", index); 
+				for(int j=0;j<sheet.getColumns();j++){
+						String cellinfo4=sheet.getCell(j, A-1).getContents();
+						String cellinfo5=sheet.getCell(j, B-1).getContents();
+						String cellinfo14=sheet.getCell(j, C-1).getContents();
+						String cellinfo15=sheet.getCell(j, D-1).getContents();
+						String cellinfo16=sheet.getCell(j, E-1).getContents();
+						//System.out.println(Double.parseDouble(cellinfo15));
+						for(int i=0;i<sheet.getRows();i++) {
+							String cellinfo=sheet.getCell(j, i).getContents();
+							jxl.write.Number a=new jxl.write.Number(j,i,Double.parseDouble(cellinfo));
+							try {
+								ws.addCell(a);
+							} catch (RowsExceededException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (WriteException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						if(index!=(sheet_size-1)) {
+							jishuan1(Double.parseDouble(cellinfo4),Double.parseDouble(cellinfo5),Double.parseDouble(cellinfo14),Double.parseDouble(cellinfo15),Double.parseDouble(cellinfo16));
+						}else {
+							jishuan2(Double.parseDouble(cellinfo4),Double.parseDouble(cellinfo5),Double.parseDouble(cellinfo14),Double.parseDouble(cellinfo15),Double.parseDouble(cellinfo16));
+						}
+						jxl.write.Number jj=new jxl.write.Number(j,22,JJ);
+						try {
+							ws.addCell(jj);
+						} catch (RowsExceededException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (WriteException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						jxl.write.Number b2=new jxl.write.Number(j,20,BB2);
+						try {
+							ws.addCell(b2);
+						} catch (RowsExceededException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (WriteException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						jxl.write.Number b1=new jxl.write.Number(j,21,BB1);
+						try {
+							ws.addCell(b1);
+						} catch (RowsExceededException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (WriteException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					
+				
+				}
+				//if(index!=(sheet_size-1))
+				//System.out.println("下一次");		
+			}
+			wwb.write();
+			wb.close();
+			try {
+				wwb.close();
+			} catch (WriteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}catch(BiffException e){
+			e.printStackTrace();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public static double BB2,BB1,JJ;
+	public void jishuan1(double a,double b,double c,double d,double e) {
+		BB2=2.0*(B*a-A*b)/(a*b)/(b-a)*Math.PI;
+		BB1=-(2.0*(D*c-C*d)/(c*d)/(d-c)+2.0*(E*d-D*e)/(d*e)/(e-d))*Math.PI/2.0;
+		System.out.printf("B2:%.3f\tB1:%.3f\tJ:%.3f\t\n",BB2,BB1,BB2-BB1);
+		JJ=0.1*H1/2*(9.8-H1/2*BB2)/(BB2-BB1);
+		
+	}
+	public void jishuan2(double a,double b,double c,double d,double e) {
+		BB2=2.0*(B*a-A*b)/(a*b)/(b-a)*Math.PI;
+		BB1=-(2.0*(D*c-C*d)/(c*d)/(d-c)+2.0*(E*d-D*e)/(d*e)/(e-d))*Math.PI/2.0;
+		JJ=0.1*H2/2.0*(9.8-H2/2.0*BB2)/(BB2-BB1);
+		//System.out.printf("B2:%.3f\tB1:%.3f\tJ:%.3f\t\n",B2,B1,J);
+	}
+	
+
+}
